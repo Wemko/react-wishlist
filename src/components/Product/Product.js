@@ -1,18 +1,26 @@
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, CardMedia, IconButton, Typography } from "@mui/material";
-import { useState } from "react"
+import { useEffect, useState } from "react";
 import WishlistService from "../../services/WishlistService/WishlistService";
 
 function Product({ product }) {
     const { id, image } = product;
-    const [onWishlist, setOnWishlist] = useState(() => WishlistService.isOnWishlist(id)); 
-    const updateWishlist = () => {
-        onWishlist ?
-            WishlistService.removeFromWishlist(id) :
-            WishlistService.addToWishlist(id) 
-        
-        setOnWishlist(!onWishlist);
-    }
+    const [onWishlist, setOnWishlist] = useState(() => WishlistService.isOnWishlist(id));
+
+    // Check if the current product is on the wishlist.
+    useEffect(() => {
+        const sub = WishlistService.wishlistSubject.subscribe(() => {
+            setOnWishlist(WishlistService.isOnWishlist(id));
+        });
+
+        return () => {
+            sub.unsubscribe();
+        }
+    }, [id])
+
+    const updateWishlist = () => onWishlist
+        ? WishlistService.removeFromWishlist(id)
+        : WishlistService.addToWishlist(id);
 
     return (
         <Card>
@@ -20,7 +28,7 @@ function Product({ product }) {
                 title={product.name}
                 action={(
                     <IconButton onClick={updateWishlist}>
-                        { onWishlist ? <Favorite /> : <FavoriteBorder />}
+                        {onWishlist ? <Favorite /> : <FavoriteBorder />}
                     </IconButton>)
                 }
             />
@@ -38,7 +46,6 @@ function Product({ product }) {
             </CardContent>
         </Card>
     );
-    <div>{product.name}</div>
 }
 
 export default Product;
