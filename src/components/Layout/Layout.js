@@ -18,7 +18,7 @@ const Layout = ({ children, title }) => {
     
     return (
         <div>
-            <AppBar position="static" sx={{ marginBottom: '32px' }} >
+            <AppBar position="sticky" sx={{ marginBottom: '32px' }} >
                 <Container sx={{ maxWidth: '800' }}>
                     <Toolbar>
                         <Container sx={{ display: 'flex', alignItems: 'center' }}>
