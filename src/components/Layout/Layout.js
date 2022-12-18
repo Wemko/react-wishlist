@@ -9,7 +9,7 @@ import Product from "../Product/Product";
 
 const Layout = ({ children, title }) => {
     const [wishListLength, setWishListLength] = useState([]);
-    const [wishlistProducts, setWishListProducts] = useState([]);
+    const [wishlistSideBarProducts, setWishlistSideBarProducts] = useState([]);
     const [openWishlist, setOpenWishlist] = useState(false);
 
     //Update the wishlist length
@@ -26,26 +26,23 @@ const Layout = ({ children, title }) => {
     //Update wishlist when opening it
     useEffect(() => {
         ProductService.getWishListProducts().then(data => {
-            setWishListProducts(data);
+            setWishlistSideBarProducts(data);
         });
     }, [openWishlist])
 
     return (
         <div>
-            <React.Fragment>
-                <Drawer
-                    anchor={'right'}
-                    open={openWishlist}
-                    onClose={() => setOpenWishlist(false)}
-                    sx={{ overflow: 'scroll-y' }}
-                >
-                    <Box sx={{ maxWidth: '300px' }}>
-                        {wishlistProducts.map((product, index) => {
-                            return <Product key={index} product={product} />
-                        })}
-                    </Box>
-                </Drawer>
-            </React.Fragment>
+            <Drawer
+                anchor={'right'}
+                open={openWishlist}
+                onClose={() => setOpenWishlist(false)}
+            >
+                <Box sx={{ maxWidth: '300px' }}>
+                    {wishlistSideBarProducts.map((product, index) => {
+                        return <Product key={index} product={product} />
+                    })}
+                </Box>
+            </Drawer>
             <AppBar position="sticky" sx={{ marginBottom: '32px' }} >
                 <Container sx={{ maxWidth: '800' }}>
                     <Toolbar>
